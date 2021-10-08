@@ -6,14 +6,14 @@ import {
   Typography,
   Container,
   LinearProgress,
-  Box,
+  CircularProgress,
 } from "@material-ui/core";
-import MuiTextField from "@material-ui/core/TextField";
-import CustomTextField from "../components/common/TextInput";
 import { makeStyles } from "@material-ui/core/styles";
 import { authenticateUser, createUser } from "../axios/user";
 import { Formik, Form, Field } from "formik";
-import { fieldToTextField, TextFieldProps } from "formik-material-ui";
+import CustomizedSnackbars from "../components/common/Snack";
+import TextField from "../components/formik/Textfield";
+import { addAuthorisedTokenToStorage } from "../localstorage/auth";
 const _ = require("lodash");
 
 const useStyles = makeStyles((theme) => ({
@@ -24,9 +24,6 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-  },
-  link: {
-    textDecoration: "none",
   },
   link: { cursor: "pointer", "&:hover": { textDecoration: "underline" } },
   container: {
@@ -39,57 +36,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TextField(props) {
-  const {
-    form: { setFieldValue },
-    field: { name },
-  } = props;
-  // const onChange = React.useCallback(
-  //   (event) => {
-  //     const { value } = event.target;
-  //     setFieldValue(name, value ? value.toUpperCase() : "");
-  //   },
-  //   [setFieldValue, name]
-  // );
-  const classes = useStyles();
-  return (
-    <MuiTextField
-      {...fieldToTextField(props)}
-      // onChange={onChange}
-      variant="outlined"
-      className={classes.textinput}
-      fullWidth
-    />
-  );
-}
-
 export default function Auth({ history }) {
   const classes = useStyles();
-  const [form, setForm] = useState({
-    firstname: "",
-    lastname: "",
-    email: "",
-    password: "",
-  });
   const [login, setLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [snack, setSnack] = useState({
+    open: false,
+    message: "",
+    severity: "",
+  });
 
   const handleClick = () => setLogin((state) => !state);
 
-  const handleSubmit = async (e) => {
-    // e.preventDefault();
-    let user = {
-      email: form.email,
-      password: form.password,
-    };
-    if (!login) user.name = `${form.firstname} ${form.lastname}`;
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    let user;
+    if (login) user = _.pick(values, ["email", "password"]);
+    else user = values;
     try {
       const res = login ? await authenticateUser(user) : await createUser(user);
-      console.log(res);
-    } catch (error) {}
+      setLoading(false);
+      addAuthorisedTokenToStorage(res.data);
+      history.push("/");
+    } catch (error) {
+      setSnack((snack) => ({
+        open: true,
+        message: error.response.data,
+        severity: "error",
+      }));
+      console.error(error.response);
+    }
   };
 
   return (
     <Container component="main" maxWidth="xs" className={classes.container}>
+      <CustomizedSnackbars snack={snack} setOpen={setSnack} />
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5" align="center" gutterBottom>
@@ -100,17 +81,13 @@ export default function Auth({ history }) {
           initialValues={{
             email: "",
             password: "",
-            firstname: "",
-            lastname: "",
+            name: "",
           }}
           validate={(values) => {
             const errors = {};
             if (!login) {
-              if (!values.firstname) {
-                errors.firstname = "Required";
-              }
-              if (!values.lastname) {
-                errors.lastname = "Required";
+              if (!values.name) {
+                errors.name = "Required";
               }
             }
             if (!values.email) {
@@ -126,54 +103,54 @@ export default function Auth({ history }) {
             return errors;
           }}
           onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
-            // handleSubmit(values);
+            handleSubmit(values);
             setSubmitting(false);
           }}
         >
-          {({ submitForm, isSubmitting }) => (
-            <Form>
-              {!login && (
+          {({ submitForm, isSubmitting, touched, errors }) => {
+            return (
+              <Form>
+                {!login && (
+                  <Field
+                    component={TextField}
+                    name="name"
+                    type="name"
+                    label="Name"
+                  />
+                )}
                 <Field
                   component={TextField}
-                  name="firstname"
-                  type="firstname"
-                  label="Firstname"
+                  name="email"
+                  type="email"
+                  label="Email"
                 />
-              )}
-              {!login && (
                 <Field
                   component={TextField}
-                  name="lastname"
-                  type="lastname"
-                  label="Lastname"
+                  type="password"
+                  label="Password"
+                  name="password"
                 />
-              )}
-              <Field
-                component={TextField}
-                name="email"
-                type="email"
-                label="Email"
-              />
-              <Field
-                component={TextField}
-                type="password"
-                label="Password"
-                name="password"
-              />
-              {isSubmitting && <LinearProgress />}
-              <Typography align="right" gutterBottom>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disabled={isSubmitting}
-                  onClick={submitForm}
-                >
-                  Submit
-                </Button>
-              </Typography>
-            </Form>
-          )}
+                {isSubmitting && <LinearProgress />}
+                <Typography align="right" gutterBottom>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={isSubmitting || !_.isEmpty(errors)}
+                    onClick={submitForm}
+                  >
+                    {loading ? (
+                      <CircularProgress
+                        color="inherit"
+                        className={classes.circle}
+                      />
+                    ) : (
+                      "Submit"
+                    )}
+                  </Button>
+                </Typography>
+              </Form>
+            );
+          }}
         </Formik>
         <Grid container justify="flex-end">
           <Grid item>

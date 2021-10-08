@@ -20,6 +20,7 @@ import AddIcon from "@material-ui/icons/Add";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Link, useHistory } from "react-router-dom";
+import { removeAuthorisedTokenFromStorage } from "../../localstorage/auth";
 // import { handleLogout } from "../helper functions/auth";
 
 const drawerWidth = 240;
@@ -112,6 +113,11 @@ function ResponsiveDrawer(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleLogout = () => {
+    removeAuthorisedTokenFromStorage();
+    history.push("/auth");
+  };
+
   const drawer = (
     <div>
       <Link to="/" className={classes.titleLink}>
@@ -134,7 +140,7 @@ function ResponsiveDrawer(props) {
           </List>
         </>
       ))}
-      <ListItem button>
+      <ListItem button onClick={handleLogout}>
         <ListItemIcon>
           <AccountBoxIcon />
         </ListItemIcon>
