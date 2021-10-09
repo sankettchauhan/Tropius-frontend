@@ -23,7 +23,7 @@ import { Link, useHistory } from "react-router-dom";
 import { removeAuthorisedTokenFromStorage } from "../../helper/auth";
 // import { handleLogout } from "../helper functions/auth";
 
-const drawerWidth = 240;
+export const drawerWidth = 240;
 const sections = [
   [
     {
@@ -54,6 +54,7 @@ const sections = [
     { text: "Contact", icon: <AccountBoxIcon />, link: "/contact" },
   ],
 ];
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -91,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    minHeight: "100vh",
   },
   link: {
     display: "flex",
