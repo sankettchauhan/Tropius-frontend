@@ -13,7 +13,7 @@ import { authenticateUser, createUser } from "../axios/user";
 import { Formik, Form, Field } from "formik";
 import CustomizedSnackbars from "../components/common/Snack";
 import TextField from "../components/formik/Textfield";
-import { addAuthorisedTokenToStorage } from "../localstorage/auth";
+import { addAuthorisedTokenToStorage } from "../helper/auth";
 const _ = require("lodash");
 
 const useStyles = makeStyles((theme) => ({

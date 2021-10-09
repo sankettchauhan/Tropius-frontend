@@ -14,6 +14,7 @@ import RentalView from "./pages/rentalview";
 import RentalNew from "./pages/rentalnew";
 import About from "./pages/about";
 import Contact from "./pages/contact";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 function Routes() {
   return (
@@ -21,17 +22,21 @@ function Routes() {
       <Switch>
         <Route exact path="/auth" component={Auth} />
         <ResponsiveDrawer>
-          <Route exact path="/customers/view" component={CustomerView} />
-          <Route exact path="/customers/new" component={CustomerNew} />
-          <Route exact path="/movies/view" component={MovieView} />
-          <Route exact path="/movies/new" component={MovieNew} />
-          <Route exact path="/genres/view" component={GenreView} />
-          <Route exact path="/genres/new" component={GenreNew} />
-          <Route exact path="/rentals/view" component={RentalView} />
-          <Route exact path="/rentals/new" component={RentalNew} />
-          <Route exact path="/aboutus" component={About} />
-          <Route exact path="/contact" component={Contact} />
-          <Route exact path="/" component={Home} />
+          <ProtectedRoute
+            exact
+            path="/customers/view"
+            component={CustomerView}
+          />
+          <ProtectedRoute exact path="/customers/new" component={CustomerNew} />
+          <ProtectedRoute exact path="/movies/view" component={MovieView} />
+          <ProtectedRoute exact path="/movies/new" component={MovieNew} />
+          <ProtectedRoute exact path="/genres/view" component={GenreView} />
+          <ProtectedRoute exact path="/genres/new" component={GenreNew} />
+          <ProtectedRoute exact path="/rentals/view" component={RentalView} />
+          <ProtectedRoute exact path="/rentals/new" component={RentalNew} />
+          <ProtectedRoute exact path="/aboutus" component={About} />
+          <ProtectedRoute exact path="/contact" component={Contact} />
+          <ProtectedRoute exact path="/" component={Home} />
         </ResponsiveDrawer>
       </Switch>
     </Router>

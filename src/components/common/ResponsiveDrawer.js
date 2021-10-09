@@ -20,7 +20,7 @@ import AddIcon from "@material-ui/icons/Add";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Link, useHistory } from "react-router-dom";
-import { removeAuthorisedTokenFromStorage } from "../../localstorage/auth";
+import { removeAuthorisedTokenFromStorage } from "../../helper/auth";
 // import { handleLogout } from "../helper functions/auth";
 
 const drawerWidth = 240;
