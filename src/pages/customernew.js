@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
     display: "grid",
     placeItems: "center",
     width: "100%",
-    marginTop: "10%",
   },
 }));
 

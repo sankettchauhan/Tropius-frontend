@@ -1,4 +1,4 @@
-import { Grid, makeStyles } from "@material-ui/core";
+import { Grid, makeStyles, Typography } from "@material-ui/core";
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     left: "50%",
     transform: "translate(-50%, -50%)",
   },
+  container: {
+    // padding: "1em",
+  },
 }));
 
 export default function CustomerView() {
@@ -33,6 +36,7 @@ export default function CustomerView() {
       const res = await getCustomers(getAuthorisedToken());
       if (res.status === 200) {
         setCustomers(res.data);
+        console.log(customers);
         setLoading(false);
       }
     } catch (error) {
@@ -54,11 +58,21 @@ export default function CustomerView() {
 
   return (
     <>
-      <Grid container>
+      <Typography sx={{ marginLeft: "1em" }} variant="h4" gutterBottom>
+        List of customers
+      </Typography>
+      <Grid container className={classes.container} spacing={3}>
         {customers.map((customer, index) => (
           <>
-            <Grid item xs={12} sm={6} md={4} lg={3}>
-              <CustomCard key={`${customer.name}-${index + 1}`} />
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              key={`${customer.name}-${index + 1}`}
+            >
+              <CustomCard customer={customer} />
             </Grid>
           </>
         ))}

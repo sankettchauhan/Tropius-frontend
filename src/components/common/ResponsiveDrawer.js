@@ -93,6 +93,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     minHeight: "100vh",
+    padding: theme.spacing(3),
   },
   link: {
     display: "flex",
