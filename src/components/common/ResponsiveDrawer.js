@@ -128,7 +128,7 @@ function ResponsiveDrawer(props) {
         </Typography>
       </Link>
       {sections.map((section, index) => (
-        <>
+        <section key={`drawer-section-${index + 1}`}>
           <Divider />
           <List>
             {section.map(({ text, icon, link }, index) => (
@@ -140,7 +140,7 @@ function ResponsiveDrawer(props) {
               </Link>
             ))}
           </List>
-        </>
+        </section>
       ))}
       <ListItem button onClick={handleLogout}>
         <ListItemIcon>

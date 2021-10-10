@@ -7,3 +7,6 @@ export const getMovies = async (token) =>
 
 export const createMovie = async (data, token) =>
   axios.post(`${process.env.REACT_APP_API_URL}/movies`, data, header(token));
+
+export const getMovieById = async (movieId, token) =>
+  axios.post(`${process.env.REACT_APP_API_URL}/movies/movieId`, header(token));

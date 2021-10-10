@@ -131,9 +131,9 @@ export default function MovieNew() {
               className={classes.mb}
             />
           ) : (
-            <Box>
+            <Typography align="center" className={classes.loading}>
               <CircularProgress />
-            </Box>
+            </Typography>
           )}
           <TextField
             fullWidth

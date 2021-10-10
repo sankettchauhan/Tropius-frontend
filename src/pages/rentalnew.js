@@ -11,12 +11,12 @@ import { Formik, Form, Field, useFormik } from "formik";
 // import TextField from "../components/formik/Textfield";
 import validationSchema from "../validators/rental";
 import { Box } from "@mui/system";
-import { createMovie, getMovies } from "../axios/movies";
+import { getMovies } from "../axios/movies";
 import { getAuthorisedToken } from "../helper/auth";
 import CustomizedSnackbars, {
   defaultSnackState,
 } from "../components/common/Snack";
-import { getRentals } from "../axios/rentals";
+import { createRental } from "../axios/rentals";
 import CustomSelectMovies from "../components/rental/CustomSelectMovies";
 import CustomSelectCustomers from "../components/rental/CustomSelectCustomers";
 import { getCustomers } from "../axios/customers";
@@ -35,9 +35,13 @@ const useStyles = makeStyles((theme) => ({
   },
   loading: {
     marginBottom: theme.spacing(2),
+    textAlign: "center",
   },
   mb: {
     marginBottom: theme.spacing(2),
+  },
+  form: {
+    width: 300,
   },
 }));
 
@@ -48,8 +52,6 @@ export default function RentalNew() {
   const [snack, setSnack] = useState(defaultSnackState);
   const [customers, setCustomers] = useState(null);
   const [movies, setMovies] = useState(null);
-  console.log("movies :", movies);
-  console.log("customers :", customers);
 
   const load = async () => {
     try {
@@ -70,8 +72,8 @@ export default function RentalNew() {
 
   const formik = useFormik({
     initialValues: {
-      customer: "",
-      movie: "",
+      customerId: "",
+      movieId: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -81,10 +83,10 @@ export default function RentalNew() {
 
   const handleSubmit = async (values) => {
     setLoading(true);
-    const data = _.pick(values, ["dailyRentalRate", "title", "numberInStock"]);
-    data.genreId = values.genre;
+    let data = values;
+    console.log(data);
     try {
-      const res = await createMovie(data, getAuthorisedToken());
+      const res = await createRental(data, getAuthorisedToken());
       if (res.status === 201) {
         setLoading(false);
         setSnack((snack) => ({
@@ -116,17 +118,17 @@ export default function RentalNew() {
         <Typography variant="h4" gutterBottom>
           Create new rental
         </Typography>
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} className={classes.form}>
           {customers ? (
             <CustomSelectCustomers
               title="Select customer"
               customers={customers}
               formik={formik}
-              name="customer"
+              name="customerId"
               className={classes.mb}
             />
           ) : (
-            <Box>
+            <Box className={classes.loading}>
               <CircularProgress />
             </Box>
           )}
@@ -135,18 +137,24 @@ export default function RentalNew() {
               title="Select movie"
               movies={movies}
               formik={formik}
-              name="movie"
+              name="movieId"
               className={classes.mb}
             />
           ) : (
-            <Box>
+            <Box className={classes.loading}>
               <CircularProgress />
             </Box>
           )}
           <Typography align="center">
-            <Button color="primary" variant="contained" type="submit">
-              Submit
-            </Button>
+            {loading ? (
+              <Box className={classes.loading}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <Button color="primary" variant="contained" type="submit">
+                Submit
+              </Button>
+            )}
           </Typography>
         </form>
       </Box>

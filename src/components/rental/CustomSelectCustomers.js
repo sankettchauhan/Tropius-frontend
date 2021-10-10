@@ -21,14 +21,14 @@ export default function CustomSelect({ name, title, customers, formik }) {
     <Box className={classes.container}>
       <FormControl
         fullWidth
-        error={formik.touched.customer && Boolean(formik.errors.customer)}
+        error={formik.touched.customerId && Boolean(formik.errors.customerId)}
       >
         <InputLabel id="demo-simple-select-label">{title}</InputLabel>
         <Select
           name={name}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={formik.values.customer}
+          value={formik.values.customerId}
           label="Select customer"
           onChange={formik.handleChange}
         >
@@ -38,8 +38,8 @@ export default function CustomSelect({ name, title, customers, formik }) {
             </MenuItem>
           ))}
         </Select>
-        {formik.touched.customer && formik.errors.customer && (
-          <FormHelperText>{formik.errors.customer}</FormHelperText>
+        {formik.touched.customerId && formik.errors.customerId && (
+          <FormHelperText>{formik.errors.customerId}</FormHelperText>
         )}
       </FormControl>
     </Box>
