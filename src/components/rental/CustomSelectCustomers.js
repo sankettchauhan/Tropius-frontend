@@ -14,32 +14,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomSelect({ name, title, genres, formik }) {
+export default function CustomSelect({ name, title, customers, formik }) {
   const classes = useStyles();
 
   return (
     <Box className={classes.container}>
       <FormControl
         fullWidth
-        error={formik.touched.genre && Boolean(formik.errors.genre)}
+        error={formik.touched.customer && Boolean(formik.errors.customer)}
       >
         <InputLabel id="demo-simple-select-label">{title}</InputLabel>
         <Select
           name={name}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={formik.values.genre}
-          label="Selected Genre"
+          value={formik.values.customer}
+          label="Select customer"
           onChange={formik.handleChange}
         >
-          {genres.map((genre, index) => (
-            <MenuItem key={`${genre._id}`} value={genre._id}>
-              {genre.name}
+          {customers.map((customer, index) => (
+            <MenuItem key={`${customer._id}`} value={customer._id}>
+              {customer.name}
             </MenuItem>
           ))}
         </Select>
-        {formik.touched.genre && formik.errors.genre && (
-          <FormHelperText>{formik.errors.genre}</FormHelperText>
+        {formik.touched.customer && formik.errors.customer && (
+          <FormHelperText>{formik.errors.customer}</FormHelperText>
         )}
       </FormControl>
     </Box>

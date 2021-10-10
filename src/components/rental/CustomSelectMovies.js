@@ -14,32 +14,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomSelect({ name, title, genres, formik }) {
+export default function CustomSelect({ name, title, movies, formik }) {
   const classes = useStyles();
 
   return (
     <Box className={classes.container}>
       <FormControl
         fullWidth
-        error={formik.touched.genre && Boolean(formik.errors.genre)}
+        error={formik.touched.movie && Boolean(formik.errors.movie)}
       >
         <InputLabel id="demo-simple-select-label">{title}</InputLabel>
         <Select
           name={name}
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={formik.values.genre}
+          value={formik.values.movie}
           label="Selected Genre"
           onChange={formik.handleChange}
         >
-          {genres.map((genre, index) => (
-            <MenuItem key={`${genre._id}`} value={genre._id}>
-              {genre.name}
+          {movies.map((movie, index) => (
+            <MenuItem key={`${movie._id}`} value={movie._id}>
+              {movie.title}
             </MenuItem>
           ))}
         </Select>
-        {formik.touched.genre && formik.errors.genre && (
-          <FormHelperText>{formik.errors.genre}</FormHelperText>
+        {formik.touched.movie && formik.errors.movie && (
+          <FormHelperText>{formik.errors.movie}</FormHelperText>
         )}
       </FormControl>
     </Box>

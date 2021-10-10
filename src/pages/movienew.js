@@ -4,15 +4,12 @@ import {
   Typography,
   LinearProgress,
   CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
+  TextField,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Formik, Form, Field } from "formik";
-import { Select } from "formik-material-ui";
-import TextField from "../components/formik/Textfield";
-import validateMovie from "../validators/movie";
+import { Formik, Form, Field, useFormik } from "formik";
+// import TextField from "../components/formik/Textfield";
+import validateMovie, { validationSchema } from "../validators/movie";
 import { Box } from "@mui/system";
 import { createMovie } from "../axios/movies";
 import { getAuthorisedToken } from "../helper/auth";
@@ -34,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
   loading: {
     marginBottom: theme.spacing(2),
   },
+  mb: {
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 export default function MovieNew() {
@@ -42,13 +42,12 @@ export default function MovieNew() {
   const [loading, setLoading] = useState(false);
   const [snack, setSnack] = useState(defaultSnackState);
   const [genres, setGenres] = useState(null);
-  const [selectedGenre, setSelectedGenre] = useState("");
 
   const load = async () => {
     try {
       const res = await getGenres(getAuthorisedToken());
       if (res.status === 200) {
-        setGenres(res.data.map((d) => d.name));
+        setGenres(res.data);
       }
     } catch (error) {
       console.error(error.response);
@@ -59,9 +58,24 @@ export default function MovieNew() {
     load();
   }, []);
 
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      genre: "",
+      numberInStock: 0,
+      dailyRentalRate: 0,
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      handleSubmit(values);
+    },
+  });
+
   const handleSubmit = async (values) => {
     setLoading(true);
-    const data = values;
+    const data = _.pick(values, ["dailyRentalRate", "title", "numberInStock"]);
+    data.genreId = values.genre;
+    console.log(values);
     try {
       const res = await createMovie(data, getAuthorisedToken());
       console.log(res);
@@ -96,91 +110,69 @@ export default function MovieNew() {
         <Typography variant="h4" gutterBottom>
           Create new movie
         </Typography>
-        <Formik
-          initialValues={{
-            title: "",
-            numberInStock: 0,
-            dailyRentalRate: 0,
-          }}
-          validate={(values) => validateMovie(values)}
-          onSubmit={(values, { setSubmitting }) => {
-            handleSubmit(values);
-            setSubmitting(false);
-          }}
-        >
-          {({ submitForm, isSubmitting, touched, errors }) => {
-            return (
-              <Form>
-                <Field
-                  component={TextField}
-                  name="title"
-                  type="text"
-                  label="Title"
-                />
-
-                {genres ? (
-                  <CustomSelect
-                    genres={genres}
-                    title={"Select genre"}
-                    selectedGenre={selectedGenre}
-                    setSelectedGenre={setSelectedGenre}
-                  />
-                ) : (
-                  <Typography align="center" className={classes.loading}>
-                    <CircularProgress />
-                  </Typography>
-                )}
-
-                {/* <FormControl>
-                  <InputLabel htmlFor="age-simple">Genre</InputLabel>
-                  <Field
-                    component={Select}
-                    name="genre"
-                    // inputProps={{
-                    //   id: "age-simple",
-                    // }}
-                  >
-                    {genres.map((genre, index) => (
-                      <MenuItem key={`${genre}-${index + 1}`} value={genre}>
-                        {genre}
-                      </MenuItem>
-                    ))}
-                  </Field>
-                </FormControl> */}
-                <Field
-                  component={TextField}
-                  name="dailyRentalRate"
-                  type="text"
-                  label="Daily rental rate"
-                />
-                <Field
-                  component={TextField}
-                  name="numberInStock"
-                  type="text"
-                  label="Number in stock"
-                />
-                {isSubmitting && <LinearProgress />}
-                <Typography align="center" gutterBottom>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    disabled={isSubmitting || !_.isEmpty(errors)}
-                    onClick={submitForm}
-                  >
-                    {loading ? (
-                      <CircularProgress
-                        color="inherit"
-                        className={classes.circle}
-                      />
-                    ) : (
-                      "create movie"
-                    )}
-                  </Button>
-                </Typography>
-              </Form>
-            );
-          }}
-        </Formik>
+        <form onSubmit={formik.handleSubmit}>
+          <TextField
+            fullWidth
+            name="title"
+            label="Title"
+            value={formik.values.title}
+            onChange={formik.handleChange}
+            error={formik.touched.title && Boolean(formik.errors.title)}
+            helperText={formik.touched.title && formik.errors.title}
+            className={classes.mb}
+            variant="outlined"
+          />
+          {genres ? (
+            <CustomSelect
+              title="Select genre"
+              genres={genres}
+              formik={formik}
+              name="genre"
+              className={classes.mb}
+            />
+          ) : (
+            <Box>
+              <CircularProgress />
+            </Box>
+          )}
+          <TextField
+            fullWidth
+            name="dailyRentalRate"
+            label="Daily rental rate"
+            value={formik.values.dailyRentalRate}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.dailyRentalRate &&
+              Boolean(formik.errors.dailyRentalRate)
+            }
+            helperText={
+              formik.touched.dailyRentalRate && formik.errors.dailyRentalRate
+            }
+            className={classes.mb}
+            variant="outlined"
+          />
+          <TextField
+            fullWidth
+            name="numberInStock"
+            label="Number in stock"
+            value={formik.values.numberInStock}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.numberInStock &&
+              Boolean(formik.errors.numberInStock)
+            }
+            helperText={
+              formik.touched.numberInStock && formik.errors.numberInStock
+            }
+            className={classes.mb}
+            variant="outlined"
+          />
+          <Typography align="center">
+            <Button color="primary" variant="contained" type="submit">
+              Submit
+            </Button>
+          </Typography>
+        </form>
       </Box>
     </>
   );
