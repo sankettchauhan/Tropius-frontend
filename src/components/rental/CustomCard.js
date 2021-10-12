@@ -8,6 +8,13 @@ import { Button, makeStyles } from "@material-ui/core";
 import { getAuthorisedToken } from "../../helper/auth";
 import { postReturn } from "../../axios/returns";
 
+const dateToString = (dateString) => {
+  const date = new Date(dateString);
+  const dString = date.toLocaleDateString();
+  const tString = date.toTimeString().split(" ")[0];
+  return dString + " " + tString;
+};
+
 const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: theme.spacing(1),
@@ -24,8 +31,6 @@ export default function CustomCard({ rental, count, disabled }) {
   const classes = useStyles();
 
   const { customer, movie, dateOut, dateReturned, rentalFee } = rental;
-  let date = new Date(dateOut);
-  date = date.toLocaleDateString();
 
   const [loading, setLoading] = useState(false);
 
@@ -72,7 +77,8 @@ export default function CustomCard({ rental, count, disabled }) {
             </Grid>
             <Grid item xs={12}>
               <Typography>
-                Rental processed at <span className={classes.date}>{date}</span>
+                Rental processed at{" "}
+                <span className={classes.date}>{dateToString(dateOut)}</span>
               </Typography>
             </Grid>
             {dateReturned && (
@@ -80,7 +86,7 @@ export default function CustomCard({ rental, count, disabled }) {
                 <Typography>
                   Return processed at{" "}
                   <span className={classes.date}>
-                    {new Date(dateReturned).toLocaleDateString()}
+                    {dateToString(dateReturned)}
                   </span>
                 </Typography>
               </Grid>

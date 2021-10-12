@@ -64,6 +64,7 @@ export default function Auth({ history }) {
         message: error.response.data,
         severity: "error",
       }));
+      setLoading(false);
       console.error(error.response);
     }
   };
