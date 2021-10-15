@@ -7,7 +7,6 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Formik, Form, Field } from "formik";
-import { CheckboxWithLabel } from "formik-material-ui";
 import TextField from "../components/formik/Textfield";
 import validateGenre from "../validators/genre";
 import { Box } from "@mui/system";

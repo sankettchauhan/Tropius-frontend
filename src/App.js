@@ -15,8 +15,10 @@ import RentalNew from "./pages/rentalnew";
 import About from "./pages/about";
 import Contact from "./pages/contact";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+require("dotenv").config();
 
 function Routes() {
+  console.log("backend api url: ", process.env.REACT_APP_API_URL);
   return (
     <Router>
       <Switch>

@@ -1,16 +1,8 @@
-import {
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+import { List, ListItem, makeStyles, Typography } from "@material-ui/core";
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { getGenres } from "../axios/genres";
-import CustomCard from "../components/customer/CustomCard";
 import { getAuthorisedToken } from "../helper/auth";
 
 const useStyles = makeStyles((theme) => ({

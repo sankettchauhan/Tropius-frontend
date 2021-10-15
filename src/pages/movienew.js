@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import {
   Button,
   Typography,
-  LinearProgress,
   CircularProgress,
   TextField,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Formik, Form, Field, useFormik } from "formik";
+import { useFormik } from "formik";
 // import TextField from "../components/formik/Textfield";
-import validateMovie, { validationSchema } from "../validators/movie";
+import { validationSchema } from "../validators/movie";
 import { Box } from "@mui/system";
 import { createMovie } from "../axios/movies";
 import { getAuthorisedToken } from "../helper/auth";
@@ -169,7 +168,7 @@ export default function MovieNew() {
           />
           <Typography align="center">
             <Button color="primary" variant="contained" type="submit">
-              Submit
+              {loading ? <CircularProgress color="inherit" /> : "Submit"}
             </Button>
           </Typography>
         </form>
