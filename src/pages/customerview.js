@@ -33,9 +33,9 @@ export default function CustomerView() {
 
   const load = async () => {
     try {
-      const res = await getCustomers(getAuthorisedToken());
-      if (res.status === 200) {
-        setCustomers(res.data);
+      const resCustomers = await getCustomers(getAuthorisedToken());
+      if (resCustomers.status === 200) {
+        setCustomers(resCustomers.data);
         console.log(customers);
         setLoading(false);
       }

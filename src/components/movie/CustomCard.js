@@ -5,12 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
 export default function CustomCard({ movie }) {
-  const {
-    title,
-    numberInStock,
-    dailyRentalRate,
-    genre: { name: genreName },
-  } = movie;
+  const { title, numberInStock, dailyRentalRate, genres } = movie;
   return (
     <Box sx={{ maxWidth: "100%", height: "100%" }}>
       <Card
@@ -23,7 +18,12 @@ export default function CustomCard({ movie }) {
       >
         <CardContent>
           <Typography variant="h5">{title}</Typography>
-          <Typography>Genre : {genreName}</Typography>
+          <Typography>
+            Genres :{" "}
+            {genres.map((g) => (
+              <span key={`movieview-genre-${g.name}`}>{g.name} </span>
+            ))}
+          </Typography>
           <Typography>Daily rental rate : {dailyRentalRate}</Typography>
           <Typography>Number in stock : {numberInStock}</Typography>
         </CardContent>

@@ -23,11 +23,11 @@ const useStyles = makeStyles((theme) => ({
     padding: `${theme.spacing(2)}px!important`,
   },
   date: {
-    fontWeight: "700",
+    fontWeight: "700!important",
   },
 }));
 
-export default function CustomCard({ rental, count, disabled }) {
+export default function CustomCardForCustomer({ rental, count, disabled }) {
   const classes = useStyles();
 
   const { customer, movie, dateOut, dateReturned, rentalFee } = rental;
@@ -41,7 +41,10 @@ export default function CustomCard({ rental, count, disabled }) {
     };
     try {
       const res = await postReturn(data, getAuthorisedToken());
-      console.log(res);
+      if (res.status === 200) {
+        window.location.reload();
+      }
+      //   console.log(res);
       setLoading(false);
     } catch (error) {
       console.error(error.response);
@@ -60,24 +63,19 @@ export default function CustomCard({ rental, count, disabled }) {
         }}
       >
         <CardContent className={classes.cardcontent}>
-          <Typography variant="h5">Rental {count}</Typography>
+          <Typography variant="h5">
+            {count}. {movie.title}
+          </Typography>
           <Grid container>
-            <Grid item xs={6}>
-              <Typography variant="h6">Customer details</Typography>
-              <Typography>{customer.name}</Typography>
-              <Typography>{customer.phone}</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography variant="h6">Movie details</Typography>
-              <Typography>{movie.title}</Typography>
+            <Grid item xs={12}>
               <Typography>
                 Daily rental rate: {movie.dailyRentalRate}
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography>
-                Rental processed at{" "}
-                <span className={classes.date}>{dateToString(dateOut)}</span>
+              <Typography>Rental processed at </Typography>
+              <Typography className={classes.date}>
+                {dateToString(dateOut)}
               </Typography>
             </Grid>
             {dateReturned && (

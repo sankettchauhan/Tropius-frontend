@@ -27,6 +27,6 @@ export function validationSchema(values) {
     numberInStock: yup
       .string("Enter numberInStock")
       .required("Number in stock is required"),
-    genre: yup.string("Enter genre").required("Genre is required"),
+    genres: yup.array().min(1).required("Please select at keast one genre"),
   });
 }

@@ -7,3 +7,9 @@ export const getRentals = async (token) =>
 
 export const createRental = async (data, token) =>
   axios.post(`${process.env.REACT_APP_API_URL}/rentals`, data, header(token));
+
+export const getRentalsOfCustomer = async (customerId, token) =>
+  axios.get(
+    `${process.env.REACT_APP_API_URL}/rentals/customer/${customerId}`,
+    header(token)
+  );

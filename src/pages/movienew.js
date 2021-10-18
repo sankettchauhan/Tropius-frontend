@@ -16,11 +16,15 @@ import CustomizedSnackbars, {
   defaultSnackState,
 } from "../components/common/Snack";
 import { getGenres } from "../axios/genres";
-import CustomSelect from "../components/movie/CustomSelect";
+import CustomCheckbox from "../components/movie/CustomCheckbox";
 const _ = require("lodash");
 
-// title,genre,numberInStock,dailyRentalRate
-
+/*
+TODO: integrate imdb api
+   send request after 1 second when title stops changing
+   show list of results below the text input
+   select from the list of movies and auto fill other values (except dailyRentalRate)
+*/
 const useStyles = makeStyles((theme) => ({
   container: {
     display: "grid",
@@ -60,7 +64,7 @@ export default function MovieNew() {
   const formik = useFormik({
     initialValues: {
       title: "",
-      genre: "",
+      genres: [],
       numberInStock: 0,
       dailyRentalRate: 0,
     },
@@ -73,8 +77,7 @@ export default function MovieNew() {
   const handleSubmit = async (values) => {
     setLoading(true);
     const data = _.pick(values, ["dailyRentalRate", "title", "numberInStock"]);
-    data.genreId = values.genre;
-    console.log(values);
+    data.genreIds = values.genres.map((g) => g._id);
     try {
       const res = await createMovie(data, getAuthorisedToken());
       console.log(res);
@@ -109,7 +112,7 @@ export default function MovieNew() {
         <Typography variant="h4" gutterBottom>
           Create new movie
         </Typography>
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} style={{ width: 450 }}>
           <TextField
             fullWidth
             name="title"
@@ -122,11 +125,10 @@ export default function MovieNew() {
             variant="outlined"
           />
           {genres ? (
-            <CustomSelect
-              title="Select genre"
-              genres={genres}
+            <CustomCheckbox
               formik={formik}
-              name="genre"
+              genres={genres}
+              name="genres"
               className={classes.mb}
             />
           ) : (

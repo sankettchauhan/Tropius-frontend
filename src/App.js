@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 
 import ResponsiveDrawer from "./components/common/ResponsiveDrawer";
 import Auth from "./pages/auth";
@@ -15,6 +20,7 @@ import RentalNew from "./pages/rentalnew";
 import About from "./pages/about";
 import Contact from "./pages/contact";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import Rentalsofcustomer from "./pages/rentalsofcustomer";
 require("dotenv").config();
 
 function Routes() {
@@ -34,11 +40,19 @@ function Routes() {
           <ProtectedRoute exact path="/movies/new" component={MovieNew} />
           <ProtectedRoute exact path="/genres/view" component={GenreView} />
           <ProtectedRoute exact path="/genres/new" component={GenreNew} />
+          <ProtectedRoute
+            exact
+            path="/rentals/customer/:customerid"
+            component={({ match }) => <Rentalsofcustomer match={match} />}
+          />
           <ProtectedRoute exact path="/rentals/view" component={RentalView} />
           <ProtectedRoute exact path="/rentals/new" component={RentalNew} />
           <ProtectedRoute exact path="/aboutus" component={About} />
           <ProtectedRoute exact path="/contact" component={Contact} />
-          <ProtectedRoute exact path="/" component={Home} />
+          <ProtectedRoute exact path="/home" component={Home} />
+          <ProtectedRoute exact path="/">
+            <Redirect to="/home" />
+          </ProtectedRoute>
         </ResponsiveDrawer>
       </Switch>
     </Router>
