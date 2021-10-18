@@ -28,5 +28,6 @@ export function validationSchema(values) {
       .string("Enter numberInStock")
       .required("Number in stock is required"),
     genres: yup.array().min(1).required("Please select at keast one genre"),
+    rating: yup.number().required("Rating is required").min(0).max(10),
   });
 }

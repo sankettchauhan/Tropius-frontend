@@ -17,6 +17,17 @@ const useStyles = makeStyles({
     top: "18%",
     right: "-40%",
   },
+  card: {
+    "&": {
+      transition: "0.3s",
+      maxWidth: "100%",
+      height: "100%",
+      textDecoration: "none",
+    },
+    "&:hover": {
+      transform: "translateY(-10px)",
+    },
+  },
 });
 
 export default function CustomCard({ customer }) {
@@ -25,13 +36,7 @@ export default function CustomCard({ customer }) {
 
   return (
     <Link to={`/rentals/customer/${_id}`} style={{ textDecoration: "none" }}>
-      <Box
-        sx={{
-          maxWidth: "100%",
-          height: "100%",
-          textDecoration: "none",
-        }}
-      >
+      <Box className={classes.card}>
         <Card
           variant="outlined"
           sx={{

@@ -65,8 +65,9 @@ export default function MovieNew() {
     initialValues: {
       title: "",
       genres: [],
-      numberInStock: 0,
-      dailyRentalRate: 0,
+      numberInStock: "",
+      dailyRentalRate: "",
+      rating: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -76,7 +77,12 @@ export default function MovieNew() {
 
   const handleSubmit = async (values) => {
     setLoading(true);
-    const data = _.pick(values, ["dailyRentalRate", "title", "numberInStock"]);
+    const data = _.pick(values, [
+      "dailyRentalRate",
+      "title",
+      "numberInStock",
+      "rating",
+    ]);
     data.genreIds = values.genres.map((g) => g._id);
     try {
       const res = await createMovie(data, getAuthorisedToken());
@@ -138,6 +144,18 @@ export default function MovieNew() {
           )}
           <TextField
             fullWidth
+            name="rating"
+            label="Rating"
+            value={formik.values.rating}
+            onChange={formik.handleChange}
+            error={formik.touched.rating && Boolean(formik.errors.rating)}
+            helperText={formik.touched.rating && formik.errors.rating}
+            className={classes.mb}
+            variant="outlined"
+            type="number"
+          />
+          <TextField
+            fullWidth
             name="dailyRentalRate"
             label="Daily rental rate"
             value={formik.values.dailyRentalRate}
@@ -151,6 +169,7 @@ export default function MovieNew() {
             }
             className={classes.mb}
             variant="outlined"
+            type="number"
           />
           <TextField
             fullWidth
@@ -167,6 +186,7 @@ export default function MovieNew() {
             }
             className={classes.mb}
             variant="outlined"
+            type="number"
           />
           <Typography align="center">
             <Button color="primary" variant="contained" type="submit">

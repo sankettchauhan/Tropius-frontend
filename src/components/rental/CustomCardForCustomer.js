@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 export default function CustomCardForCustomer({ rental, count, disabled }) {
   const classes = useStyles();
 
-  const { customer, movie, dateOut, dateReturned, rentalFee } = rental;
+  const { movie, dateOut, dateReturned, rentalFee } = rental;
 
   const [loading, setLoading] = useState(false);
 
