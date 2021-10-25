@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Typography,
@@ -11,7 +11,11 @@ import { CheckboxWithLabel } from "formik-material-ui";
 import TextField from "../components/formik/Textfield";
 import validateCustomer from "../validators/customer";
 import { Box } from "@mui/system";
-import { createCustomer } from "../axios/customers";
+import {
+  createCustomer,
+  getCustomerById,
+  updateCustomer,
+} from "../axios/customers";
 import { getAuthorisedToken } from "../helper/auth";
 import CustomizedSnackbars, {
   defaultSnackState,
@@ -28,25 +32,83 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomerNew() {
+export default function CustomerNew({ edit, customerId }) {
   const classes = useStyles();
 
   const [loading, setLoading] = useState(false);
   const [snack, setSnack] = useState(defaultSnackState);
+  // editedState contains form details when the form is in edit mode
+  const [editedState, setEditedState] = useState({});
 
-  const handleSubmit = async (values) => {
+  // get details of existing customer and fill them in the form
+  const load = async () => {
     setLoading(true);
-    const data = values;
     try {
-      const res = await createCustomer(data, getAuthorisedToken());
+      const res = await getCustomerById(customerId, getAuthorisedToken());
       if (res.status === 200) {
-        setLoading(false);
-        setSnack((snack) => ({
-          ...snack,
-          open: true,
-          severity: "success",
-          message: "Customer created!",
-        }));
+        setEditedState(res.data);
+      }
+    } catch (error) {
+      setSnack((snack) => ({
+        ...snack,
+        open: true,
+        severity: "error",
+        message:
+          error && error.response && error.response.data
+            ? error.response.data
+            : "Some error occured",
+      }));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    // load details if edit details page
+    if (edit) {
+      load();
+    }
+  }, []);
+
+  // todo: complete else statement
+  // takes values of formik as argument
+  const handleSubmit = async (values) => {
+    try {
+      // new customer
+      if (!edit) {
+        setLoading(true);
+        // get values from formik (form)
+        let data = values;
+        const res = await createCustomer(data, getAuthorisedToken());
+        if (res.status === 200) {
+          setLoading(false);
+          setSnack((snack) => ({
+            ...snack,
+            open: true,
+            severity: "success",
+            message: "Customer created!",
+          }));
+        }
+      }
+      // edit details of existing customer
+      else {
+        setLoading(true);
+        // get values from formik (form)
+        let data = _.pick(values, ["name", "phone", "isGold"]);
+        const res = await updateCustomer(
+          customerId,
+          data,
+          getAuthorisedToken()
+        );
+        if (res.status === 200) {
+          setLoading(false);
+          setSnack((snack) => ({
+            ...snack,
+            open: true,
+            severity: "success",
+            message: "Customer details edited!",
+          }));
+        }
       }
     } catch (error) {
       console.error(error.response);
@@ -63,19 +125,25 @@ export default function CustomerNew() {
     }
   };
 
+  if (loading) return <h1>Loading..</h1>;
+
   return (
     <>
       <Box className={classes.container}>
         <CustomizedSnackbars snack={snack} setOpen={setSnack} />
         <Typography variant="h4" gutterBottom>
-          Create new customer
+          {edit ? "Edit details of customer" : "Create new customer"}
         </Typography>
         <Formik
-          initialValues={{
-            name: "",
-            phone: "",
-            isGold: false,
-          }}
+          initialValues={
+            edit
+              ? { ...editedState }
+              : {
+                  name: "",
+                  phone: "",
+                  isGold: false,
+                }
+          }
           validate={(values) => validateCustomer(values)}
           onSubmit={(values, { setSubmitting }) => {
             handleSubmit(values);
@@ -116,6 +184,8 @@ export default function CustomerNew() {
                         color="inherit"
                         className={classes.circle}
                       />
+                    ) : edit ? (
+                      "edit details"
                     ) : (
                       "create customer"
                     )}

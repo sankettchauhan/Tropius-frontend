@@ -2,9 +2,12 @@ import { Grid, makeStyles, Typography } from "@material-ui/core";
 import { CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
-import { getCustomers } from "../axios/customers";
+import { deleteCustomer, getCustomers } from "../axios/customers";
 import CustomCard from "../components/customer/CustomCard";
 import { getAuthorisedToken } from "../helper/auth";
+import CustomizedSnackbars, {
+  defaultSnackState,
+} from "../components/common/Snack";
 
 // send req to get all customers
 // load in state
@@ -30,18 +33,37 @@ export default function CustomerView() {
 
   const [customers, setCustomers] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [snack, setSnack] = useState(defaultSnackState);
 
   const load = async () => {
     try {
       const resCustomers = await getCustomers(getAuthorisedToken());
       if (resCustomers.status === 200) {
         setCustomers(resCustomers.data);
-        console.log(customers);
         setLoading(false);
       }
     } catch (error) {
       console.log(error.response);
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (customerid) => {
+    try {
+      await deleteCustomer(customerid, getAuthorisedToken());
+      setSnack((snack) => ({
+        open: true,
+        severity: "success",
+        message: "Customer deleted successfully!",
+      }));
+      load();
+    } catch (error) {
+      console.error("Error: ", error);
+      setSnack((snack) => ({
+        open: true,
+        severity: "error",
+        message: "Some error occured.",
+      }));
     }
   };
 
@@ -58,12 +80,18 @@ export default function CustomerView() {
 
   return (
     <>
+      <CustomizedSnackbars snack={snack} setOpen={setSnack} />
       <Typography sx={{ marginLeft: "1em" }} variant="h4" gutterBottom>
         List of customers
       </Typography>
       <Grid container className={classes.container} spacing={3}>
-        {customers.map((customer, index) => (
-          <>
+        {/* display all customers */}
+        {customers.map((customer, index) => {
+          let customerData = customer;
+          // editlink = /customers/edit/:customerid
+          customerData.editLink = `/customers/edit/${customer._id}`;
+          customerData.deleteLink = () => handleDelete(customer._id);
+          return (
             <Grid
               item
               xs={12}
@@ -72,10 +100,10 @@ export default function CustomerView() {
               lg={3}
               key={`${customer.name}-${index + 1}`}
             >
-              <CustomCard customer={customer} />
+              <CustomCard customer={customerData} />
             </Grid>
-          </>
-        ))}
+          );
+        })}
       </Grid>
     </>
   );

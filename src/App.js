@@ -28,14 +28,25 @@ function Routes() {
   return (
     <Router>
       <Switch>
+        {/* authentication - signin and signup */}
         <Route exact path="/auth" component={Auth} />
         <ResponsiveDrawer>
+          {/* view all customer details */}
           <ProtectedRoute
             exact
             path="/customers/view"
             component={CustomerView}
           />
+          {/* create new customer */}
           <ProtectedRoute exact path="/customers/new" component={CustomerNew} />
+          {/* edit details of existing customer */}
+          <ProtectedRoute
+            exact
+            path="/customers/edit/:customerid"
+            component={({ match }) => (
+              <CustomerNew edit={true} customerId={match.params.customerid} />
+            )}
+          />
           <ProtectedRoute exact path="/movies/view" component={MovieView} />
           <ProtectedRoute exact path="/movies/new" component={MovieNew} />
           <ProtectedRoute exact path="/genres/view" component={GenreView} />
