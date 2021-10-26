@@ -84,9 +84,9 @@ export default function MovieNew() {
       "rating",
     ]);
     data.genreIds = values.genres.map((g) => g._id);
+    console.log(data);
     try {
       const res = await createMovie(data, getAuthorisedToken());
-      console.log(res);
       if (res.status === 201) {
         setLoading(false);
         setSnack((snack) => ({

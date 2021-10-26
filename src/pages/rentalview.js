@@ -24,7 +24,6 @@ export default function RentalView() {
 
   const [rentals, setRentals] = useState({});
   const [loading, setLoading] = useState(true);
-  console.log("rentals view: ", rentals);
 
   const load = async () => {
     try {

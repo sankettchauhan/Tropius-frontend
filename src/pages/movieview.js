@@ -24,7 +24,6 @@ export default function MovieView() {
 
   const [movies, setMovies] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log(movies);
 
   const load = async () => {
     try {
@@ -57,18 +56,16 @@ export default function MovieView() {
       </Typography>
       <Grid container className={classes.container} spacing={3}>
         {movies.map((movie, index) => (
-          <>
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-              key={`${movie.name}-${index + 1}`}
-            >
-              <CustomCard movie={movie} />
-            </Grid>
-          </>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            key={`${movie.name}-${index + 1}`}
+          >
+            <CustomCard movie={movie} />
+          </Grid>
         ))}
       </Grid>
     </>
