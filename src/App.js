@@ -8,7 +8,6 @@ import {
 
 import ResponsiveDrawer from "./components/common/ResponsiveDrawer";
 import Auth from "./pages/auth";
-import Home from "./pages/home";
 import CustomerNew from "./pages/customernew";
 import CustomerView from "./pages/customerview";
 import MovieNew from "./pages/movienew";
@@ -28,8 +27,12 @@ function Routes() {
   return (
     <Router>
       <Switch>
+        <Route exact path="/">
+          <Redirect to="/customers/view" />
+        </Route>
         {/* authentication - signin and signup */}
         <Route exact path="/auth" component={Auth} />
+        {/* <Route exact path="/home" component={Home} /> */}
         <ResponsiveDrawer>
           {/* view all customer details */}
           <ProtectedRoute
@@ -60,10 +63,6 @@ function Routes() {
           <ProtectedRoute exact path="/rentals/new" component={RentalNew} />
           <ProtectedRoute exact path="/aboutus" component={About} />
           <ProtectedRoute exact path="/contact" component={Contact} />
-          <ProtectedRoute exact path="/home" component={Home} />
-          <ProtectedRoute exact path="/">
-            <Redirect to="/home" />
-          </ProtectedRoute>
         </ResponsiveDrawer>
       </Switch>
     </Router>

@@ -49,10 +49,10 @@ const sections = [
     },
     { text: "Create rental", icon: <AddIcon />, link: "/rentals/new" },
   ],
-  [
-    { text: "About us", icon: <AccountBoxIcon />, link: "/aboutus" },
-    { text: "Contact", icon: <AccountBoxIcon />, link: "/contact" },
-  ],
+  // [
+  //   { text: "About us", icon: <AccountBoxIcon />, link: "/aboutus" },
+  //   { text: "Contact", icon: <AccountBoxIcon />, link: "/contact" },
+  // ],
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -142,6 +142,7 @@ function ResponsiveDrawer(props) {
           </List>
         </section>
       ))}
+      <Divider />
       <ListItem button onClick={handleLogout}>
         <ListItemIcon>
           <AccountBoxIcon />

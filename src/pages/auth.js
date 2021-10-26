@@ -57,7 +57,7 @@ export default function Auth({ history }) {
       const res = login ? await authenticateUser(user) : await createUser(user);
       setLoading(false);
       addAuthorisedTokenToStorage(res.data);
-      history.push("/");
+      history.push("/customers/view");
     } catch (error) {
       setSnack((snack) => ({
         open: true,
