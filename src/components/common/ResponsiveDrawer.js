@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     paddingTop: 11,
     paddingBottom: 11,
+    fontFamily: "fantasy",
   },
   drawer: {
     [theme.breakpoints.up("sm")]: {
@@ -124,7 +125,7 @@ function ResponsiveDrawer(props) {
     <div>
       <Link to="/" className={classes.titleLink}>
         <Typography variant="h4" align="center" className={classes.title}>
-          Vidly
+          Tropius
         </Typography>
       </Link>
       {sections.map((section, index) => (

@@ -18,7 +18,9 @@ export default function CustomCard({ movie }) {
         }}
       >
         <CardContent>
-          <Typography variant="h5">{title}</Typography>
+          <Typography variant="h5" sx={{ textTransform: "uppercase" }}>
+            {title}
+          </Typography>
           <Typography>Genres : {genreString}</Typography>
           <Typography>Daily rental rate : {dailyRentalRate}</Typography>
           <Typography>Number in stock : {numberInStock}</Typography>
