@@ -4,8 +4,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { Box } from "@mui/system";
 import { IconButton } from "@mui/material";
 import { useHistory } from "react-router-dom";
-import { deleteCustomer } from "../../axios/customers";
-import { getAuthorisedToken } from "../../helper/auth";
 
 export default function EditAndDelete({ editLink, customerid, deleteLink }) {
   const history = useHistory();

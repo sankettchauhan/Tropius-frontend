@@ -40,35 +40,35 @@ export default function CustomerNew({ edit, customerId }) {
   // editedState contains form details when the form is in edit mode
   const [editedState, setEditedState] = useState({});
 
-  // get details of existing customer and fill them in the form
-  const load = async () => {
-    setLoading(true);
-    try {
-      const res = await getCustomerById(customerId, getAuthorisedToken());
-      if (res.status === 200) {
-        setEditedState(res.data);
-      }
-    } catch (error) {
-      setSnack((snack) => ({
-        ...snack,
-        open: true,
-        severity: "error",
-        message:
-          error && error.response && error.response.data
-            ? error.response.data
-            : "Some error occured",
-      }));
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    // get details of existing customer and fill them in the form
+    const load = async () => {
+      setLoading(true);
+      try {
+        const res = await getCustomerById(customerId, getAuthorisedToken());
+        if (res.status === 200) {
+          setEditedState(res.data);
+        }
+      } catch (error) {
+        setSnack((snack) => ({
+          ...snack,
+          open: true,
+          severity: "error",
+          message:
+            error && error.response && error.response.data
+              ? error.response.data
+              : "Some error occured",
+        }));
+      } finally {
+        setLoading(false);
+      }
+    };
+
     // load details if edit details page
     if (edit) {
       load();
     }
-  }, []);
+  }, [edit, customerId]);
 
   // todo: complete else statement
   // takes values of formik as argument

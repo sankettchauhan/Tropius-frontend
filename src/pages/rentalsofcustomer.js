@@ -30,33 +30,34 @@ export default function Rentalsofcustomer({ match }) {
   const [rentals, setRentals] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  console.log(rentals);
-
-  const load = async () => {
-    try {
-      const res = await getRentalsOfCustomer(customerId, getAuthorisedToken());
-      if (res.status === 200) {
-        const processedRentals = res.data.filter((r) =>
-          Boolean(r.dateReturned)
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await getRentalsOfCustomer(
+          customerId,
+          getAuthorisedToken()
         );
-        const unprocessedRentals = res.data.filter(
-          (r) => !Boolean(r.dateReturned)
-        );
-        setRentals({
-          processed: processedRentals,
-          unprocessed: unprocessedRentals,
-        });
+        if (res.status === 200) {
+          const processedRentals = res.data.filter((r) =>
+            Boolean(r.dateReturned)
+          );
+          const unprocessedRentals = res.data.filter(
+            (r) => !Boolean(r.dateReturned)
+          );
+          setRentals({
+            processed: processedRentals,
+            unprocessed: unprocessedRentals,
+          });
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(error.response);
         setLoading(false);
       }
-    } catch (error) {
-      console.error(error.response);
-      setLoading(false);
-    }
-  };
+    };
 
-  useEffect(() => {
     load();
-  }, []);
+  }, [customerId]);
 
   if (loading)
     return (
@@ -80,11 +81,9 @@ export default function Rentalsofcustomer({ match }) {
               <Typography variant="h5">Unprocessed rentals</Typography>
             </Grid>
             {rentals.unprocessed.map((rental, index) => (
-              <>
-                <Grid item xs={12} md={4} lg={3} key={`rental-${index + 1}`}>
-                  <CustomCardForCustomer rental={rental} count={index + 1} />
-                </Grid>
-              </>
+              <Grid item xs={12} md={4} lg={3} key={`rental-${index + 1}`}>
+                <CustomCardForCustomer rental={rental} count={index + 1} />
+              </Grid>
             ))}
           </>
         )}
